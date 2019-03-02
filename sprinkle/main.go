@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 )
@@ -25,7 +26,13 @@ const otherWord = "*"
 // }
 
 func main() {
-	lines := readFile("test.txt")
+	exe, err := os.Executable()
+	var path string = filepath.Dir(exe)
+	if err != nil {
+		fmt.Println("パス情報取得失敗")
+		os.Exit(1)
+	}
+	lines := readFile(path + "/test.txt")
 	// 乱数のシードを生成
 	rand.Seed(time.Now().UTC().UnixNano())
 	s := bufio.NewScanner(os.Stdin)
@@ -41,13 +48,13 @@ func main() {
 		} else {
 			fmt.Println(output)
 		}
-	}
 }
 
 func readFile(filepath string) []string {
 	f, err := os.Open(filepath)
 	if err != nil {
 		fmt.Println("ファイル読み込みに失敗しました。")
+		fmt.Println(filepath)
 		os.Exit(1)
 	}
 
